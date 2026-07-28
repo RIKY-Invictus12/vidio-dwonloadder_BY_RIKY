@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader by RIKY INVICTUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="particles"></div>
+
+    <!-- =====================================================
+         INTRO SCREEN
+         Animasi dibagi 3 fase:
+         1. Logo muncul perlahan (fade-in 0.8s)
+         2. Teks typewriter berjalan
+         3. Fade-out keseluruhan, lalu app muncul
+    ====================================================== -->
+    <div id="intro-screen">
+        <div class="intro-content">
+            <!-- Logo besar muncul duluan sebelum teks -->
+            <div class="intro-logo glow-text">⬇️</div>
+            <h1 class="typewriter glow-text">Selamat datang di Web Video Downloader by RIKY INVICTUS</h1>
+            <!-- Bar progress elegan di bawah teks -->
+            <div class="intro-progress-bar">
+                <div class="intro-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <main id="app-container" class="hidden">
+        <header>
+            <h2 class="logo glow-text">VidDownloader</h2>
+            <button id="theme-toggle" aria-label="Toggle Dark/Light Mode">
+                <svg id="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg id="sun-icon" class="hidden" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+        </header>
+
+        <!-- TIKTOK SECTION -->
+        <section class="glass-panel input-section fade-slide-up">
+            <h3 class="section-title tiktok-title">🎵 TikTok Downloader</h3>
+            <p class="subtitle">Download Video TikTok Tanpa Watermark</p>
+            <div class="input-group">
+                <input type="url" id="tiktok-url" placeholder="Paste link video TikTok di sini..." autocomplete="off">
+                <button id="btn-tiktok" class="btn-primary">Cari TikTok</button>
+            </div>
+        </section>
+
+        <!-- FACEBOOK SECTION -->
+        <section class="glass-panel input-section fade-slide-up">
+            <h3 class="section-title fb-title">📘 Facebook Downloader</h3>
+            <p class="subtitle">Tampilkan Preview Video Facebook</p>
+            <div class="input-group">
+                <input type="url" id="fb-url" placeholder="Paste link video Facebook di sini..." autocomplete="off">
+                <button id="btn-fb" class="btn-primary fb-btn">Cari FB</button>
+            </div>
+        </section>
+
+        <!-- Loading Spinner -->
+        <div id="loader" class="hidden glass-panel fade-slide-up">
+            <div class="spinner"></div>
+            <p>Mencari video, mohon tunggu...</p>
+        </div>
+
+        <!-- Result Section -->
+        <section id="result-section" class="glass-panel hidden fade-slide-up">
+            <div class="preview-container" id="video-preview">
+                <!-- Preview Thumbnail / Iframe goes here -->
+            </div>
+
+            <div class="download-options" id="download-options">
+                <h3>Pilih Resolusi &amp; Format:</h3>
+
+                <!--
+                    .resolution-badges sekarang KOSONG di HTML.
+                    Badge diisi dinamis oleh JavaScript (renderResolutionBadges)
+                    setelah API TikTok merespons — sehingga badge yang tidak
+                    tersedia dari API langsung dinonaktifkan secara otomatis.
+                    id="resolution-badges" dipakai sebagai hook oleh script.js.
+                -->
+                <div class="resolution-badges" id="resolution-badges">
+                    <!-- Badge diisi oleh JS -->
+                </div>
+
+                <div class="action-buttons">
+                    <a id="btn-dl-nowm" class="btn-primary no-wm" href="#" target="_blank">⬇ Unduh Tanpa Tanda Air</a>
+                    <a id="btn-dl-mp4"  class="btn-secondary"     href="#" target="_blank">⬇ Download MP4 (WM)</a>
+                    <a id="btn-dl-mp3"  class="btn-outline"        href="#" target="_blank">🎵 Download MP3</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="glass-panel history-section fade-slide-up">
+            <h3>Riwayat Unduhan (5 Terakhir)</h3>
+            <ul id="history-list">
+                <li class="empty-history">Belum ada riwayat.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Made with 🤗 by RIKY INVICTUS &copy; 2026</p>
+    </footer>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

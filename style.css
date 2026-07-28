@@ -1,0 +1,425 @@
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
+:root {
+    --bg-color:        #0F0F1A;
+    --text-primary:    #FFFFFF;
+    --text-secondary:  #A0A0B0;
+    --primary-color:   #8B5CF6;
+    --secondary-color: #A855F7;
+    --fb-color:        #1877F2;
+    --fb-dark:         #0C56B3;
+    --glass-bg:        rgba(255, 255, 255, 0.05);
+    --glass-border:    rgba(255, 255, 255, 0.1);
+    --input-bg:        rgba(0, 0, 0, 0.3);
+
+    /* Badge-specific tokens */
+    --badge-active-bg:      rgba(139, 92, 246, 0.15);
+    --badge-selected-bg:    rgba(139, 92, 246, 0.45);
+    --badge-selected-glow:  0 0 12px rgba(139, 92, 246, 0.7);
+    --badge-disabled-bg:    rgba(255, 255, 255, 0.03);
+}
+
+.light-mode {
+    --bg-color:       #F8F9FA;
+    --text-primary:   #1A1A24;
+    --text-secondary: #4A4A5A;
+    --glass-bg:       rgba(255, 255, 255, 0.7);
+    --glass-border:   rgba(0, 0, 0, 0.1);
+    --input-bg:       rgba(255, 255, 255, 0.9);
+
+    --badge-active-bg:   rgba(139, 92, 246, 0.12);
+    --badge-selected-bg: rgba(139, 92, 246, 0.3);
+    --badge-disabled-bg: rgba(0, 0, 0, 0.04);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+}
+
+h1, h2, h3, .btn-primary { font-family: 'Poppins', sans-serif; }
+
+/* ============================================================
+   PARTICLES
+   ============================================================ */
+#particles {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1; overflow: hidden;
+}
+
+.particle {
+    position: absolute; width: 8px; height: 8px;
+    background: var(--primary-color); border-radius: 50%;
+    box-shadow: 0 0 15px var(--secondary-color);
+    animation: floatUp 15s infinite linear; opacity: 0.4;
+}
+
+@keyframes floatUp {
+    0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+    50%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ============================================================
+   INTRO SCREEN  ← diperhalus dengan 3 fase animasi
+   ============================================================ */
+#intro-screen {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--bg-color);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+    /* Fade-out dikontrol JS lewat opacity + transition */
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Wrapper konten intro agar bisa dianimasikan bersama */
+.intro-content {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
+    padding: 0 24px; max-width: 560px;
+    /* Masuk dari bawah sedikit saat intro dimulai */
+    animation: introContentEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes introContentEnter {
+    from { transform: translateY(18px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Emoji logo besar sebelum teks */
+.intro-logo {
+    font-size: 3rem;
+    animation: introPulse 2s ease-in-out infinite;
+    line-height: 1;
+}
+
+@keyframes introPulse {
+    0%, 100% { transform: scale(1);    filter: brightness(1); }
+    50%       { transform: scale(1.12); filter: brightness(1.3); }
+}
+
+/* Typewriter — overflow diperhalus */
+.typewriter {
+    overflow: hidden;
+    white-space: normal;
+    text-align: center;
+    font-size: 1.4rem;
+    line-height: 1.55;
+    padding: 0 4px;
+    border-right: 3px solid var(--secondary-color);
+    /* Jeda 0.6s sebelum mulai ngetik supaya logo sempat muncul */
+    animation:
+        typing       3.2s steps(44, end) 0.6s both,
+        blink-caret  0.75s step-end infinite;
+}
+
+.glow-text {
+    text-shadow:
+        0 0 10px rgba(139, 92, 246, 0.8),
+        0 0 20px rgba(168, 85, 247, 0.6);
+}
+
+@keyframes typing {
+    from { width: 0; opacity: 0; }
+    to   { width: 100%; opacity: 1; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50%      { border-color: var(--secondary-color); }
+}
+
+/* Progress bar elegan di bawah teks — mengisi dalam ~3.5 detik */
+.intro-progress-bar {
+    width: 220px; height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 99px; overflow: hidden;
+    /* Muncul setelah 0.6s bersamaan dengan typewriter */
+    animation: fadeInDelayed 0.4s ease 0.6s both;
+}
+
+.intro-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 99px;
+    /* Durasi sama dengan total waktu di JS (4.5 detik) dikurangi delay awal */
+    animation: progressGrow 3.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+}
+
+@keyframes progressGrow {
+    from { width: 0; }
+    to   { width: 100%; }
+}
+
+@keyframes fadeInDelayed {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ============================================================
+   APP CONTAINER
+   ============================================================ */
+#app-container {
+    width: 100%; max-width: 800px;
+    padding: 20px; flex-grow: 1;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+.hidden { display: none !important; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0 20px 0;
+}
+
+#theme-toggle {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    color: var(--text-primary); padding: 10px; border-radius: 50%;
+    cursor: pointer; transition: 0.3s;
+}
+
+#theme-toggle:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: var(--primary-color);
+}
+
+/* ============================================================
+   GLASS PANEL
+   ============================================================ */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px; padding: 25px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.fade-slide-up { animation: slideUpFade 0.8s ease forwards; }
+
+@keyframes slideUpFade {
+    from { transform: translateY(30px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ============================================================
+   INPUT SECTIONS
+   ============================================================ */
+.section-title  { margin-bottom: 5px; font-size: 1.2rem; }
+.tiktok-title   { color: var(--secondary-color); }
+.fb-title       { color: var(--fb-color); }
+.subtitle       { margin-bottom: 20px; color: var(--text-secondary); font-size: 0.9rem; }
+
+.input-group { display: flex; flex-direction: column; gap: 15px; }
+
+input[type="url"] {
+    width: 100%; padding: 15px; border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: var(--input-bg); color: var(--text-primary);
+    outline: none; transition: 0.3s; font-size: 0.95rem;
+}
+
+input[type="url"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+button, .btn-primary, .btn-secondary, .btn-outline {
+    padding: 12px 20px; border-radius: 10px; border: none;
+    cursor: pointer; font-weight: 600; text-align: center;
+    text-decoration: none; transition: transform 0.2s, box-shadow 0.3s;
+    display: block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+.btn-primary:hover  { transform: scale(1.02); box-shadow: 0 0 15px var(--primary-color); }
+
+.fb-btn { background: linear-gradient(135deg, var(--fb-color), var(--fb-dark)); }
+.fb-btn:hover { box-shadow: 0 0 15px var(--fb-color); }
+
+.btn-secondary { background: var(--text-primary); color: var(--bg-color); }
+.btn-outline   { background: transparent; border: 1px solid var(--secondary-color); color: var(--text-primary); }
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+#loader {
+    text-align: center; display: flex;
+    flex-direction: column; align-items: center; justify-content: center; padding: 40px;
+}
+
+.spinner {
+    width: 40px; height: 40px;
+    border: 4px solid rgba(139, 92, 246, 0.3);
+    border-top: 4px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* ============================================================
+   PREVIEW
+   ============================================================ */
+.preview-container {
+    width: 100%; border-radius: 10px; overflow: hidden;
+    margin-bottom: 20px; background: rgba(0,0,0,0.5);
+    display: flex; justify-content: center; padding: 10px;
+}
+
+.preview-container img {
+    max-width: 100%; max-height: 400px;
+    border-radius: 8px; object-fit: contain;
+}
+
+.preview-container iframe {
+    max-width: 100%; background: white; border-radius: 8px;
+}
+
+/* ============================================================
+   RESOLUTION BADGES  ← state lengkap
+   ============================================================ */
+.resolution-badges {
+    display: flex; gap: 10px;
+    margin: 15px 0 20px 0;
+    flex-wrap: wrap;
+    min-height: 36px; /* cegah layout jump saat badge belum dirender */
+}
+
+/* BASE badge */
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border: 1px solid var(--primary-color);
+    background: var(--badge-active-bg);
+    color: var(--text-primary);
+    transition:
+        background  0.2s ease,
+        box-shadow  0.2s ease,
+        transform   0.15s ease,
+        opacity     0.2s ease;
+    user-select: none;
+}
+
+/* Hover — hanya badge yang aktif */
+.badge.badge-active:hover {
+    background: rgba(139, 92, 246, 0.28);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+}
+
+/* Terpilih */
+.badge.badge-selected {
+    background: var(--badge-selected-bg);
+    box-shadow: var(--badge-selected-glow);
+    border-color: var(--secondary-color);
+    color: #fff;
+}
+
+/* Nonaktif — URL tidak ada dari API */
+.badge.badge-disabled {
+    background: var(--badge-disabled-bg);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-secondary);
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none; /* blokir semua event mouse */
+}
+
+/* ============================================================
+   ACTION BUTTONS (result)
+   ============================================================ */
+.action-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+.history-section ul { list-style: none; margin-top: 15px; }
+
+.history-section li {
+    padding: 10px; border-bottom: 1px solid var(--glass-border);
+    font-size: 0.9rem; word-break: break-all;
+}
+
+.history-section li:last-child { border-bottom: none; }
+.history-section a { color: var(--secondary-color); text-decoration: none; }
+.history-section a:hover { text-decoration: underline; }
+.empty-history { color: var(--text-secondary); font-style: italic; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+    padding: 20px; text-align: center;
+    font-size: 0.9rem; color: var(--text-secondary);
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+    position: fixed; bottom: 30px;
+    left: 50%; transform: translateX(-50%);
+    background: #EF4444;
+    color: white; padding: 12px 24px;
+    border-radius: 8px; z-index: 2000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    font-weight: 500;
+    /* Animasi masuk/keluar */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.hidden {
+    /* Override display:none supaya transisi bisa berjalan
+       (hidden tetap dipakai JS, tapi kita tambahkan opacity juga) */
+    display: none !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (min-width: 768px) {
+    .input-group          { flex-direction: row; }
+    .input-group input    { flex-grow: 1; }
+    .input-group button   { width: 150px; }
+    .action-buttons       { flex-direction: row; flex-wrap: wrap; }
+    .action-buttons a     { flex: 1; }
+    .no-wm                { flex: 100% !important; }
+}
+
+/* Reduced motion — hormati preferensi sistem */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
